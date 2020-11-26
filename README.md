@@ -10,7 +10,7 @@ Only matlab contraint-based models (.mat file extension) are supported as comman
 
 - The Sensitivity Analysis Library in Python (**SALib**) to use the Sobol method.
 
-## Example
+## Usage example
 
 Saltelli's scheme generates model parameterizations that are optimized using flux balance analysis:
 
