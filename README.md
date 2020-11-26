@@ -1,11 +1,12 @@
 # Accelerated-globalSA-of-constraint-based-models
 Accelerated global sensitivity analysis of genome-wide constraint-based metabolic models.
 
+Only matlab contraint-based models (.mat file extension) are supported as command line argument.
+
 ## Dependencies
-An implementation of the Message Passing Interface (MPI) standard for running parallel applications.
+An implementation of the Message Passing Interface (MPI) standard for running parallel applications using the mpi4py python package.
 
 ## Example
-Only matlab contraint-based models (.mat file extension) are supported.
 
 Saltelli's scheme generates model parameterizations that are optimized using flux balance analysis:
 
