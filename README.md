@@ -4,7 +4,11 @@ Accelerated global sensitivity analysis of genome-wide constraint-based metaboli
 Only matlab contraint-based models (.mat file extension) are supported as command line argument.
 
 ## Dependencies
-An implementation of the Message Passing Interface (MPI) standard for running parallel applications using the mpi4py python package.
+- An implementation of the Message Passing Interface (**MPI**) standard for running parallel applications using the **mpi4py** python package.
+
+- The **cobrapy** python package to analyze metabolic constraint-based models.
+
+- The Sensitivity Analysis Library in Python (**SALib**) to use the Sobol method.
 
 ## Example
 
