@@ -21,11 +21,10 @@ with open('Y.pkl', 'rb') as f:
 
 Si = sobol.analyze(problem,
                    Y,
-                   calc_second_order=True,
+                   calc_second_order=False,
                    num_resamples=100,
                    conf_level=0.95,
-                   parallel=True,
-                   n_processors=16)
+                   parallel=False)
 
 with open('Si.pkl', 'wb') as f:
     pickle.dump(Si, f, pickle.HIGHEST_PROTOCOL)
