@@ -19,3 +19,5 @@ Saltelli's scheme generates model parameterizations that are optimized using flu
 Sobol sequence calculates sensitivity indices of target reactions:
 
 <code>python sobol_analyze.py</code>
+
+A pickled representation of a dictionary containing the indices is written to a file named 'Si.pkl'.
