@@ -4,6 +4,8 @@ from SALib.sample import saltelli
 
 import numpy as np
 import scipy
+
+import argparse
 import pickle
 
 try:
@@ -17,10 +19,19 @@ if __name__ == '__main__':
     size = comm.Get_size()
     rank = comm.Get_rank()
 
+    # Parse arguments.
+    parser = argparse.ArgumentParser()
+    parser.add_argument("model",
+                        help="Path of constraint-based matlab model to analyze.")
+    parser.add_argument("-N",
+                        "--num_samples",
+                        help="The number of samples to generate for each target reaction.",
+                        type=int)
+    args = parser.parse_args()
+    
     # Load genome-wide constraint-based metabolic model.
-    print("Model loading ...")
-    model = cobra.io.load_matlab_model("Recon3DModel_301.mat")
-    print("Done")
+    print("Rank {0} loading model {1}".format(rank, args.model))
+    model = cobra.io.load_matlab_model(args.model)
 
     # Broadcast target reactions across tasks.
     if rank == 0:
@@ -53,7 +64,9 @@ if __name__ == '__main__':
     }
 
     # Number of samples to generate.
-    N = 2**2;
+    N = args.num_samples
+    if N is None:
+        N = 2**4
 
     if rank == 0:
 
@@ -69,7 +82,7 @@ if __name__ == '__main__':
                             N,
                             calc_second_order=False)
 
-        print("The Saltelli sampler generated {0} samples".format(X.shape[0]))
+        print("The Saltelli sampler generated {0} samples.".format(X.shape[0]))
 
         # Model outputs.
         Y = np.empty(X.shape[0], dtype='float64')
@@ -111,7 +124,7 @@ if __name__ == '__main__':
     if rank != 0:
         shape = comm.recv(source=0, tag=rank)
         chunk = np.empty(shape, dtype='float64')
-        print("Rank {0} with chunk shape {1}".format(rank, chunk.shape))
+        print("Rank {0} received a chunk of shape {1} from rank 0.".format(rank, chunk.shape))
         comm.Recv([chunk, MPI.DOUBLE], source=0, tag=rank+size)
 
     # High Performance Computing (HPC) loop
@@ -119,6 +132,7 @@ if __name__ == '__main__':
     get_reaction_by_id = model.reactions.get_by_id
     partial_Y = np.empty(chunk.shape[0], dtype='float64')
 
+    print("Rank {0} is optimizing its chunk using flux balance analysis.".format(rank))
     for i, sample in enumerate(chunk):
         for name, value in zip(names, sample):
             get_reaction_by_id(name).lower_bound = value
